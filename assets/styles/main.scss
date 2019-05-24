@@ -1,0 +1,10 @@
+@import "~typeface-montserrat/index.css";
+@import "~typeface-raleway/index.css";
+@import "~@mdi/font/css/materialdesignicons.css";
+@import "./vendor.scss";
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

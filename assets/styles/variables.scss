@@ -1,0 +1,41 @@
+@import "~bulma/sass/utilities/functions.sass";
+
+$grey-darker: #1e2227;
+$grey-dark: #606266;
+$grey: #909399;
+$grey-light: #c0c4cc;
+$grey-lighter: #dcdfe6;
+
+$orange: #ff851b;
+$yellow: #e6a23c;
+$green: #67c23a;
+$blue: #409eff;
+$red: #f56c6c;
+
+$link: #4582ec !default;
+$primary: $blue !default;
+$danger: $red;
+
+$subtitle-color: $grey;
+
+$primary-invert: findColorInvert($primary);
+
+$link: $primary;
+$link-invert: $primary-invert;
+$link-focus-border: $primary;
+
+$info-invert: #fff;
+$family-sans-serif: "Montserrat";
+$family-heading: "Raleway";
+$family-serif: Georgia, Cambria, "Times New Roman", Times, serif;
+$thickness: 4px;
+
+$pagination-current-border: darken($primary, 5);
+$navbar-item-active-color: $primary;
+$dropdown-content-shadow: 0 0 0 1px #dbdbdb, 0 #{$thickness} 0 1px #dbdbdb;
+$navbar-dropdown-boxed-shadow: $dropdown-content-shadow;
+$box-shadow: none;
+
+$radius-small: 4px !default;
+$radius: 6px !default;
+$radius-large: 8px !default;

@@ -1,0 +1,99 @@
+// Themes
+
+// Litera
+
+.button {
+  padding-left: 1em;
+  padding-right: 1em;
+  border-radius: 50px;
+
+  &.is-small {
+    border-radius: 40px;
+    font-size: 0.85rem;
+  }
+}
+
+.content {
+  font-size: 1.1rem;
+  font-family: $family-serif;
+
+  .button {
+    font-family: $family-sans-serif;
+  }
+}
+
+.card-header-title,
+.menu-label,
+.message-header,
+.modal-card-title,
+.panel-heading,
+.subtitle,
+.title,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700;
+  font-family: $family-heading;
+}
+
+blockquote {
+  font-style: italic;
+}
+
+.input,
+.textarea {
+  transition: all 200ms ease;
+  box-shadow: none;
+}
+
+.notification {
+  @each $name, $pair in $colors {
+    $color: nth($pair, 1);
+    $color-invert: nth($pair, 2);
+
+    &.is-#{$name} {
+      a:not(.button) {
+        color: $color-invert;
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.hero {
+  .navbar {
+    border: none;
+    box-shadow: 0 1px 0 rgba($border, 0.25);
+  }
+}
+
+.card {
+  $card-border-color: $grey-darker;
+  box-shadow: 0 0 1px $grey-light;
+
+  .card-header {
+    box-shadow: none;
+    border-bottom: 1px solid $grey-lighter;
+  }
+}
+
+// Custom
+
+.no-underline {
+  border-bottom: 1px solid transparent !important;
+}
+
+hr {
+  margin: 0.5rem 0;
+}
+
+a.dropdown-item.is-active,
+.dropdown .dropdown-menu .has-link a.is-active,
+button.dropdown-item.is-active {
+  font-weight: bold !important;
+  background-color: $primary !important;
+  color: #fff;
+}
