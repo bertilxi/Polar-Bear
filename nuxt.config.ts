@@ -1,8 +1,6 @@
 require("dotenv").config({ path: `./.env.${process.env.NODE_ENV}` });
 import NuxtConfiguration from "@nuxt/config";
 
-console.log(process.env);
-
 const config: NuxtConfiguration = {
   env: {
     ...(process.env as any)
