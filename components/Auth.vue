@@ -1,5 +1,5 @@
 <template>
-  <div class="is-flex ">
+  <div class="auth">
     <template v-if="user">
       <b-dropdown position="is-bottom-left" aria-role="menu">
         <a slot="trigger" class="navbar-item" role="button">
@@ -94,3 +94,13 @@ export default Vue.extend({
   }
 });
 </script>
+
+<style lang="scss" scoped>
+.auth {
+  display: flex;
+  flex: 1 1 auto;
+  .navbar-item {
+    width: 100%;
+  }
+}
+</style>

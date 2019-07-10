@@ -41,9 +41,22 @@
           />
         </b-switch>
       </div>
+
+      <a
+        role="button"
+        class="navbar-burger burger"
+        aria-label="menu"
+        aria-expanded="false"
+        data-target="navbarBasicExample"
+        @click="toggleMenu"
+      >
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
     </div>
 
-    <div class="navbar-menu">
+    <div class="navbar-menu" :class="{ 'is-active': mobileMenu }">
       <div class="navbar-end">
         <nuxt-link to="/contact" class="navbar-item">Contacto</nuxt-link>
         <nuxt-link to="/about" class="navbar-item">Nosotros</nuxt-link>
@@ -61,7 +74,8 @@ export default Vue.extend({
   components: { Auth },
   data() {
     return {
-      mode: ""
+      mode: "",
+      mobileMenu: false
     };
   },
   mounted() {
@@ -72,6 +86,9 @@ export default Vue.extend({
     handleModeChange(mode) {
       localStorage.setItem("mode", mode);
       document.body.className = mode;
+    },
+    toggleMenu() {
+      this.mobileMenu = !this.mobileMenu;
     }
   }
 });
