@@ -65,10 +65,8 @@ export default Vue.extend({
             const user = result.user as firebase.User;
 
             db.collection("users")
-              .add({
-                uid: user.uid,
-                roles: ["USER"]
-              })
+              .doc(user.uid)
+              .set({ roles: ["USER"] })
               .catch(() => {
                 Notification.error("Error al crear Rol de usuario.");
               });
@@ -95,11 +93,13 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .auth {
   display: flex;
   flex: 1 1 auto;
-  .navbar-item {
+  .navbar-item,
+  .dropdown-trigger,
+  .dropdown {
     width: 100%;
   }
 }

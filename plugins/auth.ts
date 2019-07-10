@@ -10,12 +10,10 @@ export default context => {
       }
 
       db.collection("users")
-        .where("uid", "==", user.uid)
+        .doc(user.uid)
         .get()
-        .then(snapshot => {
-          snapshot.forEach(doc => {
-            store.dispatch("login", { ...user, ...doc.data() });
-          });
+        .then(doc => {
+          store.dispatch("login", { ...user, ...doc.data() });
           return resolve();
         });
     });

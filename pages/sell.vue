@@ -134,14 +134,14 @@ export default Vue.extend({
       const client =
         typeof selectedClient === "string"
           ? { name: selectedClient }
-          : selectedClient;
+          : selectedClient || "";
 
       const newSales = sales.map(sale =>
         db.collection("sales").add({
           ...sale,
           client,
-          sellerId: this.$store.state.user.uid,
-          sellerName: this.$store.state.user.displayName
+          sellerId: this.$store.state.user.id || "",
+          sellerName: this.$store.state.user.displayName || ""
         })
       );
       Promise.all([...transactions, ...newSales])

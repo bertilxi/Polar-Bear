@@ -1,6 +1,9 @@
 <template>
   <Page fullscreen>
-    <div class="has-text-right">
+    <div class="buttons has-text-right">
+      <b-button icon-left="upload">
+        CSV
+      </b-button>
       <b-button type="is-primary" icon-left="plus" @click="add">
         Nuevo
       </b-button>
@@ -8,8 +11,6 @@
         Guardar Todo
       </b-button>
     </div>
-
-    <hr />
 
     <b-table
       :data="data"

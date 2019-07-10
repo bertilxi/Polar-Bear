@@ -1,5 +1,5 @@
 <template>
-  <div v-swiper:mySwiper="swiperOption">
+  <!-- <div v-swiper:mySwiper="swiperOption">
     <div class="swiper-wrapper">
       <div v-for="banner in banners" :key="banner" class="swiper-slide">
         <div class="swiper-zoom-container">
@@ -10,7 +10,8 @@
     <div slot="button-prev" class="swiper-button-prev" />
     <div slot="button-next" class="swiper-button-next" />
     <div class="swiper-pagination" />
-  </div>
+  </div> -->
+  <div></div>
 </template>
 
 <script>
