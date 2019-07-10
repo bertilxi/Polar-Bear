@@ -115,16 +115,16 @@ export default Vue.extend({
       this.sales[index].sold = Number(value);
     },
     confirmSave() {
-      const sales = this.sales.filter(sale => sale.productId && sale.sold > 0);
-      const refs = sales.map(sale =>
+      const refs = this.sales.map(sale =>
         db.collection("products").doc(sale.productId)
       );
       const transactions: Promise<any>[] = refs.map((ref, index) => {
         return db.runTransaction(transaction =>
           transaction.get(ref).then(doc => {
             const data = doc.data() || {};
-            const sold = Number(data.sold || 0) + sales[index].sold;
-            const available = Number(data.available || 0) - sales[index].sold;
+            const sold = Number(data.sold || 0) + this.sales[index].sold;
+            const available =
+              Number(data.available || 0) - this.sales[index].sold;
             transaction.update(ref, { sold, available });
           })
         );
@@ -136,10 +136,11 @@ export default Vue.extend({
           ? { name: selectedClient }
           : selectedClient || "";
 
-      const newSales = sales.map(sale =>
+      const newSales = this.sales.map(sale =>
         db.collection("sales").add({
           ...sale,
           client,
+          date: new Date().toISOString(),
           sellerId: this.$store.state.user.id || "",
           sellerName: this.$store.state.user.displayName || ""
         })
@@ -153,6 +154,12 @@ export default Vue.extend({
         .catch(() => this.$toast.open("Error guardando la venta"));
     },
     save() {
+      this.sales = this.sales.filter(
+        sale => sale.productId && Number(sale.sold) > 0
+      );
+      if (!this.sales.length) {
+        return;
+      }
       this.$dialog.confirm({
         message: "Guardar venta?",
         onConfirm: this.confirmSave

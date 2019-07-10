@@ -1,5 +1,5 @@
 <template>
-  <Page>
+  <Page fullscreen>
     <b-table
       :data="data"
       custom-row-key="id"
@@ -21,6 +21,9 @@
         <b-table-column field="sold" label="Unidades" numeric>
           {{ props.row.sold }}
         </b-table-column>
+        <b-table-column field="date" label="Fecha" width="150">
+          {{ getDate(props.row) }}
+        </b-table-column>
       </template>
     </b-table>
   </Page>
@@ -30,6 +33,7 @@
 import Vue from "vue";
 import Page from "@/components/Page.vue";
 import { db, toArray } from "@/plugins/firebase";
+import dayjs from "@/plugins/day";
 
 export default Vue.extend({
   middleware: "seller",
@@ -61,6 +65,11 @@ export default Vue.extend({
 
       const product = this.products[sale.productId] || {};
       return `${product.name} - ${product.size} - ${product.color}`;
+    },
+    getDate(sale) {
+      return typeof sale.date === "string"
+        ? dayjs(sale.date).format("hh:mm DD/MM/YYYY")
+        : "";
     }
   }
 });

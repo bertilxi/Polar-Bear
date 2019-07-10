@@ -11,6 +11,9 @@
           <nuxt-link to="/products" class="navbar-item">Productos</nuxt-link>
         </b-dropdown-item>
         <b-dropdown-item v-if="hasRole('ADMIN')" has-link aria-role="menuitem">
+          <nuxt-link to="/clients" class="navbar-item">Clientes</nuxt-link>
+        </b-dropdown-item>
+        <b-dropdown-item v-if="hasRole('ADMIN')" has-link aria-role="menuitem">
           <nuxt-link to="/sales" class="navbar-item">Ventas</nuxt-link>
         </b-dropdown-item>
         <b-dropdown-item v-if="hasRole('SELLER')" has-link aria-role="menuitem">

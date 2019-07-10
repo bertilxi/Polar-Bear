@@ -61,7 +61,8 @@ const config: NuxtConfiguration = {
     { src: "~/plugins/swiper.ts", ssr: false },
     "~/plugins/validate.ts",
     "~/plugins/firebase.ts",
-    "~/plugins/auth.ts"
+    "~/plugins/auth.ts",
+    "~/plugins/day.ts"
   ],
 
   manifest: {

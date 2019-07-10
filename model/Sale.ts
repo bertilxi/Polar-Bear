@@ -4,4 +4,5 @@ export interface Sale {
   clientId: number;
   sellerId: string;
   sold: number;
+  date: string;
 }
