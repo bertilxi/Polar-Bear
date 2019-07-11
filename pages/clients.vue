@@ -1,6 +1,20 @@
 <template>
   <Page fullscreen>
     <div class="buttons has-text-right">
+      <div class="file button-file">
+        <label class="file-label">
+          <input class="file-input" type="file" @change="uploadCSV" />
+          <span class="button">
+            <span class="file-icon">
+              <i class="mdi mdi-upload" />
+            </span>
+            <span class="file-label">
+              CSV
+            </span>
+          </span>
+        </label>
+      </div>
+
       <b-button type="is-primary" icon-left="plus" @click="add">
         Nuevo
       </b-button>
@@ -18,7 +32,7 @@
       mobile-cards
     >
       <template slot-scope="props">
-        <b-table-column field="name" label="Nombre">
+        <b-table-column field="name" label="Nombre" width="200">
           <Editable v-model="props.row.name" />
         </b-table-column>
         <b-table-column field="email" label="Email">
@@ -27,21 +41,21 @@
         <b-table-column field="address" label="Dirección">
           <Editable v-model="props.row.address" />
         </b-table-column>
-        <b-table-column field="tel" label="Teléfono">
+        <b-table-column field="tel" label="Teléfono" width="150">
           <Editable v-model="props.row.tel" />
         </b-table-column>
 
-        <b-table-column field="facebook" label="Facebook">
+        <b-table-column field="facebook" label="Facebook" width="200">
           <Editable v-model="props.row.facebook" />
         </b-table-column>
-        <b-table-column field="instagram" label="Instagram">
+        <b-table-column field="instagram" label="Instagram" width="200">
           <Editable v-model="props.row.instagram" />
         </b-table-column>
-        <b-table-column field="twiter" label="Twiter">
+        <b-table-column field="twiter" label="Twiter" width="200">
           <Editable v-model="props.row.twiter" />
         </b-table-column>
 
-        <b-table-column label="Acciones" width="250">
+        <b-table-column label="Acciones" width="210">
           <b-button
             type="is-primary"
             icon-left="content-save"
@@ -79,6 +93,7 @@ import Page from "@/components/Page.vue";
 import Editable from "@/components/Editable.vue";
 import { db, toArray } from "@/plugins/firebase";
 import { Notification } from "@/plugins/notification";
+import papa from "@/plugins/papaparse";
 
 export default Vue.extend({
   middleware: "admin",
@@ -124,6 +139,45 @@ export default Vue.extend({
       db.collection("clients")
         .doc(id)
         .delete();
+    },
+    uploadCSV(event) {
+      const file = [...event.target.files][0];
+      if (!file) {
+        return;
+      }
+      const clients: any[] = [];
+
+      return new Promise(resolve => {
+        papa.parse(file, {
+          worker: true,
+          header: true,
+          dynamicTyping: true,
+          step: (row: any) => {
+            if (!row.data["Apellido y Nombre"]) {
+              return;
+            }
+
+            const client = {
+              name: row.data["Apellido y Nombre"] || "",
+              tel: row.data.Celular || "",
+              address: row.data.Localidad || "",
+              gender: row.data.Sexo || "",
+              size: row.data.Talle || ""
+            };
+            clients.push(client);
+          },
+          complete: () => {
+            resolve(clients);
+
+            const batch = db.batch();
+            clients.forEach(product => {
+              const ref = db.collection("clients").doc();
+              batch.set(ref, product);
+            });
+            batch.commit();
+          }
+        });
+      });
     }
   }
 });

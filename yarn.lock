@@ -1713,6 +1713,13 @@
   dependencies:
     "@types/webpack" "*"
 
+"@types/papaparse@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@types/papaparse/-/papaparse-5.0.0.tgz#fcac0a5008e04eaf66c64e77e6924e55df6ed7b4"
+  integrity sha512-JxYinxHA59+Vk3H61fjrPp1v0tjeT+WcyL/TGYDzmiig8125ndlbI5c6ZKVEaXQbsU8RF3TyCvH7tWsG2bI/Nw==
+  dependencies:
+    "@types/node" "*"
+
 "@types/q@^1.5.1":
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.2.tgz#690a1475b84f2a884fd07cd797c00f5f31356ea8"
@@ -7084,6 +7091,11 @@ pako@^1.0.5, pako@~1.0.2, pako@~1.0.5:
   version "1.0.10"
   resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.10.tgz#4328badb5086a426aa90f541977d4955da5c9732"
   integrity sha512-0DTvPVU3ed8+HNXOu5Bs+o//Mbdj9VNQMUOe9oKCwh8l0GNwpTDMKCWbRjgtD291AWnkAgkqA/LOnQS8AmS1tw==
+
+papaparse@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/papaparse/-/papaparse-5.0.0.tgz#026f66f85b7f59378719c8cc130f8fce3d71f396"
+  integrity sha512-gCqNseOMB5RInYXR051oWfCIZZI9ldhijkeMj0kNYLpE/hSRLHaW8ctoK4h3IuS1v8l+PovsV96LjXtgmzHRxA==
 
 parallel-transform@^1.1.0:
   version "1.1.0"

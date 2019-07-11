@@ -97,3 +97,24 @@ button.dropdown-item.is-active {
   background-color: $primary !important;
   color: #fff;
 }
+
+.table {
+  .input {
+    font-size: 14px;
+    background: transparent;
+    border: 1px solid transparent;
+    &:hover {
+      background: #fff;
+      border: 1px solid $primary;
+    }
+    &:focus {
+      border: 1px solid $primary;
+    }
+  }
+  & th {
+    font-size: 14px;
+  }
+  & td {
+    padding: 1px !important;
+  }
+}

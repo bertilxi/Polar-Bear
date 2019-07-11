@@ -62,7 +62,8 @@ const config: NuxtConfiguration = {
     "~/plugins/validate.ts",
     "~/plugins/firebase.ts",
     "~/plugins/auth.ts",
-    "~/plugins/day.ts"
+    "~/plugins/day.ts",
+    "~/plugins/papaparse.ts"
   ],
 
   manifest: {

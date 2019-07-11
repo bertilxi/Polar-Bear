@@ -1,9 +1,20 @@
 <template>
-  <Page fullscreen>
+  <Page fullscreen compact>
     <div class="buttons has-text-right">
-      <b-button icon-left="upload">
-        CSV
-      </b-button>
+      <div class="file button-file">
+        <label class="file-label">
+          <input class="file-input" type="file" @change="uploadCSV" />
+          <span class="button">
+            <span class="file-icon">
+              <i class="mdi mdi-upload" />
+            </span>
+            <span class="file-label">
+              CSV
+            </span>
+          </span>
+        </label>
+      </div>
+
       <b-button type="is-primary" icon-left="plus" @click="add">
         Nuevo
       </b-button>
@@ -21,30 +32,25 @@
       mobile-cards
     >
       <template slot-scope="props">
-        <b-table-column field="name" label="Nombre" width="250">
+        <b-table-column field="name" label="Nombre" width="300">
           <Editable v-model="props.row.name" />
-        </b-table-column>
-        <b-table-column field="color" label="Color" width="100">
-          <Editable v-model="props.row.color" />
         </b-table-column>
         <b-table-column field="size" label="Talle" width="100">
           <Editable v-model="props.row.size" />
         </b-table-column>
+        <b-table-column field="sold" label="Vendidos" width="120">
+          <Editable v-model="props.row.sold" />
+        </b-table-column>
+        <b-table-column field="manufactured" label="Fabricados" width="120">
+          <Editable v-model="props.row.manufactured" />
+        </b-table-column>
+        <b-table-column field="available" label="Disponibles" width="120">
+          <Editable v-model="props.row.available" />
+        </b-table-column>
         <b-table-column field="description" label="Descripción">
           <Editable v-model="props.row.description" />
         </b-table-column>
-        <b-table-column
-          field="available"
-          label="Disponibles"
-          width="120"
-          numeric
-        >
-          <Editable v-model="props.row.available" />
-        </b-table-column>
-        <b-table-column field="sold" label="Vendidos" width="120" numeric>
-          <Editable v-model="props.row.sold" />
-        </b-table-column>
-        <b-table-column label="Acciones" width="250">
+        <b-table-column label="Acciones" width="210">
           <b-button
             type="is-primary"
             icon-left="content-save"
@@ -82,6 +88,7 @@ import Page from "@/components/Page.vue";
 import Editable from "@/components/Editable.vue";
 import { db, toArray } from "@/plugins/firebase";
 import { Notification } from "@/plugins/notification";
+import papa from "@/plugins/papaparse";
 
 export default Vue.extend({
   middleware: "admin",
@@ -127,6 +134,46 @@ export default Vue.extend({
       db.collection("products")
         .doc(id)
         .delete();
+    },
+    uploadCSV(event) {
+      const file = [...event.target.files][0];
+      if (!file) {
+        return;
+      }
+      const products: any[] = [];
+
+      return new Promise(resolve => {
+        papa.parse(file, {
+          worker: true,
+          header: true,
+          dynamicTyping: true,
+          step: (row: any) => {
+            if (!row.data.NOMBRE) {
+              return;
+            }
+
+            const product = {
+              name: row.data.NOMBRE || "",
+              description: row.data.DESCRIPCION || "",
+              size: row.data.TALLE || "",
+              available: row.data.DISPONIBLE || "",
+              manufactured: row.data.FABRICADOS || "",
+              sold: row.data.VENDIDOS || ""
+            };
+            products.push(product);
+          },
+          complete: () => {
+            resolve(products);
+
+            const batch = db.batch();
+            products.forEach(product => {
+              const ref = db.collection("products").doc();
+              batch.set(ref, product);
+            });
+            batch.commit();
+          }
+        });
+      });
     }
   }
 });
