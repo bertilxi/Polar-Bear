@@ -12,17 +12,13 @@
     <hr />
 
     <b-field>
-      <b-taginput
-        v-model="client"
-        :data="filteredClients"
-        maxtags="1"
-        ellipsis
-        autocomplete
-        allow-new
-        icon="label"
+      <b-autocomplete
+        v-model="clientSearch"
         placeholder="Elegi un cliente"
         field="name"
-        @typing="getFilteredTags"
+        :data="filteredClients"
+        open-on-focus
+        @select="selectClient"
       />
     </b-field>
 
@@ -36,15 +32,14 @@
     >
       <template slot-scope="props">
         <b-table-column label="Articulo">
-          <b-select expanded @input="selectProduct($event, props.index)">
-            <option
-              v-for="option in data"
-              :key="`${props.index}-${option.id}`"
-              :value="option.id"
-            >
-              {{ displayName(option) }}
-            </option>
-          </b-select>
+          <b-autocomplete
+            v-model="productSearch"
+            placeholder="Elegi un artículo"
+            field="name"
+            :data="filteredProducts"
+            open-on-focus
+            @select="selectProduct($event, props.index)"
+          />
         </b-table-column>
 
         <b-table-column label="Cantidad" width="150">
@@ -79,16 +74,39 @@ export default Vue.extend({
   components: { Page, Editable },
   data() {
     return {
-      data: [] as any[],
+      clientSearch: "",
+      productSearch: "",
+      client: undefined as any,
+      products: [] as any[],
       clients: [] as any[],
-      client: [] as any[],
-      filteredClients: [] as any[],
       sales: [{}] as any[]
     };
   },
+
+  computed: {
+    filteredProducts() {
+      return this.products.filter(
+        option =>
+          option.name
+            .toString()
+            .toLowerCase()
+            .indexOf(this.productSearch.toLowerCase()) >= 0
+      );
+    },
+    filteredClients() {
+      return this.clients.filter(
+        option =>
+          option.name
+            .toString()
+            .toLowerCase()
+            .indexOf(this.clientSearch.toLowerCase()) >= 0
+      );
+    }
+  },
+
   mounted() {
     db.collection("products").onSnapshot(snapshot => {
-      this.data = toArray(snapshot);
+      this.products = toArray(snapshot);
     });
     db.collection("clients").onSnapshot(snapshot => {
       this.clients = toArray(snapshot);
@@ -96,7 +114,7 @@ export default Vue.extend({
   },
   methods: {
     displayName({ name = "", color = "", size = "" }) {
-      return `${name} - ${color} - ${size}`;
+      return `${name} - ${size}`;
     },
     add() {
       this.sales.push({});
@@ -108,8 +126,21 @@ export default Vue.extend({
 
       this.sales.splice(index, 1);
     },
-    selectProduct(productId: number, index: number) {
-      this.sales[index].productId = productId;
+    selectProduct(product: any, index: number) {
+      this.productSearch = "";
+      if (!product || !product.id) {
+        this.sales[index].productId = undefined;
+        return;
+      }
+      this.sales[index].productId = product.id;
+    },
+    selectClient(client: number) {
+      this.clientSearch = "";
+      if (!client) {
+        this.client = undefined;
+        return;
+      }
+      this.client = client;
     },
     setQuantity(value: string, index: number) {
       this.sales[index].sold = Number(value);
@@ -130,7 +161,7 @@ export default Vue.extend({
         );
       });
 
-      const selectedClient = this.client[0];
+      const selectedClient = this.client;
       const client =
         typeof selectedClient === "string"
           ? { name: selectedClient }
@@ -149,11 +180,14 @@ export default Vue.extend({
         .then(() => {
           this.$toast.open("Venta guardada");
           this.sales = [];
-          this.client = [];
+          this.client = undefined;
         })
         .catch(() => this.$toast.open("Error guardando la venta"));
     },
     save() {
+      console.log(
+        JSON.parse(JSON.stringify({ sales: this.sales, client: this.client }))
+      );
       this.sales = this.sales.filter(
         sale => sale.productId && Number(sale.sold) > 0
       );
@@ -164,15 +198,6 @@ export default Vue.extend({
         message: "Guardar venta?",
         onConfirm: this.confirmSave
       });
-    },
-    getFilteredTags(text) {
-      this.filteredClients = this.clients.filter(
-        client =>
-          client.name
-            .toString()
-            .toLowerCase()
-            .indexOf(text.toLowerCase()) >= 0
-      );
     }
   }
 });

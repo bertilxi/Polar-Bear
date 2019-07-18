@@ -1,29 +1,42 @@
 <template>
   <Page fullscreen>
-    <div class="buttons has-text-right">
-      <div class="file button-file">
-        <label class="file-label">
-          <input class="file-input" type="file" @change="uploadCSV" />
-          <span class="button">
-            <span class="file-icon">
-              <i class="mdi mdi-upload" />
-            </span>
-            <span class="file-label">
-              CSV
-            </span>
-          </span>
-        </label>
+    <div class="toolbar">
+      <div class="toolbar-title">
+        Clientes
       </div>
+      <div class="toolbar-buttons">
+        <div class="file button-file">
+          <label class="file-label">
+            <input class="file-input" type="file" @change="uploadCSV" />
+            <span class="button is-small">
+              <span class="file-icon">
+                <i class="mdi mdi-upload" />
+              </span>
+              <span class="file-label">
+                CSV
+              </span>
+            </span>
+          </label>
+        </div>
 
-      <b-button type="is-primary" icon-left="plus" @click="add">
-        Nuevo
-      </b-button>
-      <b-button icon-left="content-save-all" @click="saveAll">
-        Guardar Todo
-      </b-button>
+        <b-button
+          type="is-primary"
+          icon-left="plus"
+          size="is-small"
+          @click="add"
+        >
+          Nuevo
+        </b-button>
+        <b-button icon-left="content-save-all" size="is-small" @click="saveAll">
+          Guardar Todo
+        </b-button>
+      </div>
     </div>
 
+    <hr />
+
     <b-table
+      class="editable-table"
       :data="data"
       custom-row-key="id"
       striped

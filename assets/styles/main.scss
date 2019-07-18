@@ -10,5 +10,16 @@
 }
 
 .button-file {
-  margin-right: 0.5rem;
+  display: inline-flex;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  .toolbar-title {
+    font-size: 25px;
+    flex: 1 1 auto;
+  }
+  .toolbar-buttons {
+  }
 }

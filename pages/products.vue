@@ -1,50 +1,81 @@
 <template>
-  <Page fullscreen compact>
-    <div class="buttons has-text-right">
-      <div class="file button-file">
-        <label class="file-label">
-          <input class="file-input" type="file" @change="uploadCSV" />
-          <span class="button">
-            <span class="file-icon">
-              <i class="mdi mdi-upload" />
-            </span>
-            <span class="file-label">
-              CSV
-            </span>
-          </span>
-        </label>
+  <Page fullscreen>
+    <div class="toolbar">
+      <div class="toolbar-title">
+        Productos
       </div>
-
-      <b-button type="is-primary" icon-left="plus" @click="add">
-        Nuevo
-      </b-button>
-      <b-button icon-left="content-save-all" @click="saveAll">
-        Guardar Todo
-      </b-button>
+      <div class="toolbar-buttons">
+        <div class="file button-file">
+          <label class="file-label">
+            <input class="file-input" type="file" @change="uploadCSV" />
+            <span class="button is-small">
+              <span class="file-icon">
+                <i class="mdi mdi-upload" />
+              </span>
+              <span class="file-label">
+                CSV
+              </span>
+            </span>
+          </label>
+        </div>
+        <b-button
+          type="is-primary"
+          size="is-small"
+          icon-left="plus"
+          @click="add"
+        >
+          Nuevo
+        </b-button>
+        <b-button icon-left="content-save-all" size="is-small" @click="saveAll">
+          Guardar
+        </b-button>
+      </div>
     </div>
+    <hr />
 
     <b-table
+      class="editable-table"
       :data="data"
       custom-row-key="id"
       striped
       narrowed
       hoverable
       mobile-cards
+      paginated
+      pagination-simple
     >
       <template slot-scope="props">
-        <b-table-column field="name" label="Nombre" width="300">
+        <b-table-column field="name" label="Nombre" width="300" sortable>
           <Editable v-model="props.row.name" />
         </b-table-column>
-        <b-table-column field="size" label="Talle" width="100">
+        <b-table-column field="size" label="Talle" width="100" sortable>
           <Editable v-model="props.row.size" />
         </b-table-column>
-        <b-table-column field="sold" label="Vendidos" width="120">
+        <b-table-column
+          field="sold"
+          label="Vendidos"
+          width="120"
+          numeric
+          sortable
+        >
           <Editable v-model="props.row.sold" />
         </b-table-column>
-        <b-table-column field="manufactured" label="Fabricados" width="120">
+        <b-table-column
+          field="manufactured"
+          label="Fabricados"
+          width="120"
+          numeric
+          sortable
+        >
           <Editable v-model="props.row.manufactured" />
         </b-table-column>
-        <b-table-column field="available" label="Disponibles" width="120">
+        <b-table-column
+          field="available"
+          label="Disponibles"
+          width="120"
+          numeric
+          sortable
+        >
           <Editable v-model="props.row.available" />
         </b-table-column>
         <b-table-column field="description" label="Descripción">

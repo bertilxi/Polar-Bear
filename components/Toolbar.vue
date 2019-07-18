@@ -4,7 +4,7 @@
       <nuxt-link to="/" class="navbar-item brand no-underline">
         <img
           class="brand-logo"
-          src="~/static/icon.png"
+          src="~/static/icon-white.png"
           width="30"
           alt="logo"
         />PolarBear

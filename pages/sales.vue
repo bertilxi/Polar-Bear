@@ -64,7 +64,7 @@ export default Vue.extend({
       }
 
       const product = this.products[sale.productId] || {};
-      return `${product.name} - ${product.size} - ${product.color}`;
+      return `${product.name} - ${product.size}`;
     },
     getDate(sale) {
       return typeof sale.date === "string"

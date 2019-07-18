@@ -38,6 +38,7 @@ const config: NuxtConfiguration = {
   },
 
   build: {
+    cssSourceMap: false,
     extractCSS: true,
     optimizeCSS: true,
     html: {
