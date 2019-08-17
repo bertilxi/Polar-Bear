@@ -41,8 +41,6 @@
       narrowed
       hoverable
       mobile-cards
-      paginated
-      pagination-simple
     >
       <template slot-scope="props">
         <b-table-column field="name" label="Nombre" width="300" sortable>
@@ -120,7 +118,9 @@ import Editable from "@/components/Editable.vue";
 import { db, toArray } from "@/plugins/firebase";
 import { Notification } from "@/plugins/notification";
 import papa from "@/plugins/papaparse";
+import natsort from "natsort";
 
+const sorter = natsort();
 export default Vue.extend({
   middleware: "admin",
   components: { Page, Editable },
@@ -135,7 +135,9 @@ export default Vue.extend({
     db.collection("products").onSnapshot(snapshot => {
       this.data = [];
       this.$nextTick(() => {
-        this.data = toArray(snapshot);
+        this.data = toArray(snapshot).sort((a, b) =>
+          sorter(a.name, b.name)
+        );
       });
     });
   },

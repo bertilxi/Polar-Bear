@@ -35,8 +35,8 @@
           <b-autocomplete
             v-model="productSearch"
             placeholder="Elegi un artículo"
-            field="name"
             :data="filteredProducts"
+            :custom-formatter="displayName"
             open-on-focus
             @select="selectProduct($event, props.index)"
           />
@@ -63,12 +63,14 @@
   </Page>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from "vue";
 import Page from "@/components/Page.vue";
 import Editable from "@/components/Editable.vue";
 import { db, toArray } from "@/plugins/firebase";
+import natsort from "natsort";
 
+const sorter = natsort();
 export default Vue.extend({
   middleware: "seller",
   components: { Page, Editable },
@@ -76,31 +78,35 @@ export default Vue.extend({
     return {
       clientSearch: "",
       productSearch: "",
-      client: undefined as any,
-      products: [] as any[],
-      clients: [] as any[],
-      sales: [{}] as any[]
+      client: undefined,
+      products: [],
+      clients: [],
+      sales: [{}]
     };
   },
 
   computed: {
     filteredProducts() {
-      return this.products.filter(
-        option =>
-          option.name
-            .toString()
-            .toLowerCase()
-            .indexOf(this.productSearch.toLowerCase()) >= 0
-      );
+      return this.products
+        .filter(
+          option =>
+            option.name
+              .toString()
+              .toLowerCase()
+              .indexOf(this.productSearch.toLowerCase()) >= 0
+        )
+        .sort((a, b) => sorter(a.name, b.name));
     },
     filteredClients() {
-      return this.clients.filter(
-        option =>
-          option.name
-            .toString()
-            .toLowerCase()
-            .indexOf(this.clientSearch.toLowerCase()) >= 0
-      );
+      return this.clients
+        .filter(
+          option =>
+            option.name
+              .toString()
+              .toLowerCase()
+              .indexOf(this.clientSearch.toLowerCase()) >= 0
+        )
+        .sort((a, b) => sorter(a.name, b.name));
     }
   },
 
@@ -119,14 +125,14 @@ export default Vue.extend({
     add() {
       this.sales.push({});
     },
-    remove(index: number) {
+    remove(index) {
       if (!this.sales || !this.sales.length) {
         return;
       }
 
       this.sales.splice(index, 1);
     },
-    selectProduct(product: any, index: number) {
+    selectProduct(product, index) {
       this.productSearch = "";
       if (!product || !product.id) {
         this.sales[index].productId = undefined;
@@ -134,7 +140,7 @@ export default Vue.extend({
       }
       this.sales[index].productId = product.id;
     },
-    selectClient(client: number) {
+    selectClient(client) {
       this.clientSearch = "";
       if (!client) {
         this.client = undefined;
@@ -142,14 +148,14 @@ export default Vue.extend({
       }
       this.client = client;
     },
-    setQuantity(value: string, index: number) {
+    setQuantity(value, index) {
       this.sales[index].sold = Number(value);
     },
     confirmSave() {
       const refs = this.sales.map(sale =>
         db.collection("products").doc(sale.productId)
       );
-      const transactions: Promise<any>[] = refs.map((ref, index) => {
+      const transactions = refs.map((ref, index) => {
         return db.runTransaction(transaction =>
           transaction.get(ref).then(doc => {
             const data = doc.data() || {};

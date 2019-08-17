@@ -1,7 +1,11 @@
 <template>
   <Page fullscreen>
+    <b-field label="Filtrar">
+      <b-input v-model="searchTerm" />
+    </b-field>
+
     <b-table
-      :data="data"
+      :data="filteredData"
       custom-row-key="id"
       striped
       narrowed
@@ -21,7 +25,7 @@
         <b-table-column field="sold" label="Unidades" numeric>
           {{ props.row.sold }}
         </b-table-column>
-        <b-table-column field="date" label="Fecha" width="150">
+        <b-table-column field="date" label="Fecha" width="150" numeric>
           {{ getDate(props.row) }}
         </b-table-column>
       </template>
@@ -29,7 +33,7 @@
   </Page>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from "vue";
 import Page from "@/components/Page.vue";
 import { db, toArray } from "@/plugins/firebase";
@@ -40,8 +44,9 @@ export default Vue.extend({
   components: { Page },
   data() {
     return {
-      data: [] as any[],
-      products: {} as any
+      data: [],
+      products: {},
+      searchTerm: ""
     };
   },
   mounted() {
@@ -54,8 +59,24 @@ export default Vue.extend({
     });
 
     db.collection("sales").onSnapshot(snapshot => {
-      this.data = toArray(snapshot);
+      this.data = toArray(snapshot).sort((saleA, saleB) => {
+        return new Date(saleB.date).getTime() - new Date(saleA.date).getTime();
+      });
     });
+  },
+  computed: {
+    filteredData() {
+      return this.data.filter(item => {
+        const product = this.products[item.productId] || {};
+        const description = `${item.sellerName} ${product.name} ${this.getDate(
+          item
+        )}`;
+
+        return description
+          .toLowerCase()
+          .includes(this.searchTerm.trim().toLowerCase());
+      });
+    }
   },
   methods: {
     getProduct(sale) {
@@ -64,7 +85,7 @@ export default Vue.extend({
       }
 
       const product = this.products[sale.productId] || {};
-      return `${product.name} - ${product.size}`;
+      return `${product.name || ""}${" - " + (product.size || "")}`;
     },
     getDate(sale) {
       return typeof sale.date === "string"
